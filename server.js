@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const dotenv =  require('dotenv');
 const connectDB = require('./config/db');
 const path = require('path');
+const cors = require('cors');
 
 // object
 const app = express();
@@ -15,20 +16,21 @@ dotenv.config();
 connectDB();
 
 //middlewares
+app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); 
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-  });
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Credentials', true); // Include this line
+  next();
+});
 
 //routes
 app.use('/api/v1/user', require('./routes/userRouter'));
 app.use('/api/v1/user', require('./routes/profileRoute'));
-
 
 
 //port
